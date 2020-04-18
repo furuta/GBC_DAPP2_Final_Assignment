@@ -1,0 +1,74 @@
+.logo {
+    display: flex;
+    align-items: center;
+    margin-right: auto;
+    flex: 1;
+}
+
+.logo_image {
+    height: 4rem;
+    margin-left: 3rem;
+    margin-right: 1rem;
+}
+
+.logo_title {
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 2rem;
+}
+
+.user-nav {
+    display: flex;
+    align-self: stretch;
+    align-items: center;
+    flex: 1;
+
+    &__item {
+        width: 10rem;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 2rem;
+        cursor: pointer;
+        height: 100%;
+        text-decoration: none;
+        color: inherit;
+
+        &-active {
+            background-color: var(--color-primary-dark);
+            color: var(--color-white);
+        }
+    }
+
+    &__item span {
+        z-index: 22;
+        transition: all .5s;
+    }
+
+    &__item::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 0px;
+        width: 100%;
+        background-color: var(--color-primary-dark);
+        color: var(--color-white);
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: all .5s;
+        z-index: 1;
+    }
+
+    &__item:hover {
+        &::before {
+            transform: scaleX(1);
+            height: 100%;
+        }
+
+        span {
+            color: var(--color-white);
+        }
+    }
+}

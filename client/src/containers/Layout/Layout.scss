@@ -1,0 +1,20 @@
+.layout {
+    width: 100%;
+    min-height: 100vh;
+}
+
+.header {
+    height: 7rem;
+    background-color: var(--color-secondary);
+    border-bottom: var(--line);
+    box-shadow: var(--shadow-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.4rem;
+}
+
+.content {
+    width: 70%;
+    margin: 0 auto;
+}
