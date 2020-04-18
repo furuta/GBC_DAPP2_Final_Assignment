@@ -22,7 +22,7 @@ jobs:
             - name: install truffle
               run: |
                 npm i truffle
-                truffle version
+                node_modules/.bin/truffle version
             - name: exec truffle test
               run: |
-                truffle test
+                node_modules/.bin/truffle test
