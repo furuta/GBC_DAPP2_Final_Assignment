@@ -8,7 +8,6 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/pickers": "^3.2.10",
     "@openzeppelin/contracts": "^2.5.0",
-    "@openzeppelin/test-helpers": "^0.5.5",
     "date-fns": "^2.12.0",
     "node-sass": "^4.13.1",
     "react": "^16.12.0",

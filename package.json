@@ -1,0 +1,27 @@
+{
+  "name": "gbc_dapp2_final_assignment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^2.5.0",
+    "@openzeppelin/test-helpers": "^0.5.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/furuta/GBC_DAPP2_Final_Assignment.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/furuta/GBC_DAPP2_Final_Assignment/issues"
+  },
+  "homepage": "https://github.com/furuta/GBC_DAPP2_Final_Assignment#readme"
+}
