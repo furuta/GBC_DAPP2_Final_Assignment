@@ -29,7 +29,7 @@ export default function App() {
       const web3Instance = await getWeb3();
       // Get owner account
       const ownerAccount = web3Instance.eth.accounts.privateKeyToAccount(process.env.REACT_APP_CONTRACT_OWNER_PRIVATE_KEY);
-      web3Instance.eth.accounts.wallet.add(ownerAccount);
+      // web3Instance.eth.accounts.wallet.add(ownerAccount);
       console.log('owner');
       console.log(ownerAccount);
       // Use web3 to get the user's accounts.
@@ -45,7 +45,7 @@ export default function App() {
         BookingTokenContract.abi,
         deployedNetwork.address,
         {
-          gas: 2000000
+          gas: 21000
           // gasPrice: '300000000000000'
         }
       );
@@ -90,7 +90,7 @@ export default function App() {
           <div className="App-Content">
             {/* <Solution /> */}
             <Switch>
-              <Route path="/rooms/:id/date/:date">
+              <Route path="/rooms/:roomId/date/:date">
                 <RoomPage owner={owner} contract={contract} account={account}/>
               </Route>
               <Route path="/rooms/:roomId/calendar">

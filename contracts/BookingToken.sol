@@ -10,42 +10,45 @@ contract BookingToken is ERC721Full, Ownable {
   uint256 private _currentTokenId;
   string public _name = 'TomoToken';
   string public _symbol = 'TTN';
-  string private _baseURI = '';
+  string private _baseURI;
+  address private _owner;
   mapping(uint256 => string) private _tokenURIs;
 
   mapping (address => bool) private _hotels;
   struct Stock{
     address hotel;
+    address guest;
     uint256 roomId;
     uint16 year;
     uint8 month;
     uint8 day;
     bool status;
+    bool returned;
   }
   Stock[] public _stocks;
   // mapping(uint => Stock) private _stocks;
   // mapping(uint => mapping(uint => mapping(uint => uint256[]))) private _stockDate;
 
-  constructor() ERC721Full(_name, _symbol) public {}
+  constructor() ERC721Full(_name, _symbol) public {
+    _owner = _msgSender();
+  }
 
   /**
-    * @dev Mints a token to an address with a tokenURI.
-    * @param _to address of the future owner of the token
+    * @dev Mints a token by a hotel address.
     */
-  function mintTo(
-    address _to,
+  function mint(
     uint256 _roomId,
     uint16 _year,
     uint8 _month,
     uint8 _day
-  ) external onlyOwner returns(uint256 tokenId){
-    // uint256 newTokenId = _getNextTokenId();
-    uint256 tokenId = _stocks.push(Stock(_to, _roomId, _year, _month, _day, true)) - 1;
+  ) public onlyHotel returns(uint256 tokenId){
+    uint256 id = _stocks.push(Stock(_msgSender(), address(0), _roomId, _year, _month, _day, true, false)) - 1;
 
-    _mint(_to, tokenId);
+    _mint(_msgSender(), id);
     _incrementTokenId();
+    approve(_owner, id);
 
-    return tokenId;
+    return id;
   }
 
   /**
@@ -63,23 +66,29 @@ contract BookingToken is ERC721Full, Ownable {
     _currentTokenId++;
   }
 
-  function getTokenInformation(uint256 tokenId) external returns(
+  function getTokenInformation(uint256 tokenId) external view returns(
     address hotel,
+    address guest,
     uint256 roomId,
     uint16 year,
     uint8 month,
     uint8 day,
-    bool status
+    bool status,
+    bool returned
   ){
     require(_exists(tokenId), "Nonexistent token");
 
+    Stock memory stock = _stocks[tokenId];
+
     return (
-      _stocks[tokenId].hotel,
-      _stocks[tokenId].roomId,
-      _stocks[tokenId].year,
-      _stocks[tokenId].month,
-      _stocks[tokenId].day,
-      _stocks[tokenId].status
+      stock.hotel,
+      stock.guest,
+      stock.roomId,
+      stock.year,
+      stock.month,
+      stock.day,
+      stock.status,
+      stock.returned
     );
   }
 
@@ -103,8 +112,11 @@ contract BookingToken is ERC721Full, Ownable {
     approve(_stocks[_tokenId].hotel, _tokenId);
   }
 
-  function requestReturnStock(uint256 _tokenId) external onlyRoomOwner(_tokenId) {
-    transferFrom(ownerOf(_tokenId), _stocks[_tokenId].hotel, _tokenId);
+  function returnStock(uint256 _tokenId) external {
+    _stocks[_tokenId].returned = true;
+    _stocks[_tokenId].guest = _msgSender();
+
+    transferFrom(_msgSender(), _stocks[_tokenId].hotel, _tokenId);
   }
 
   function exists(uint256 tokenId) external view returns(bool) {
@@ -140,8 +152,8 @@ contract BookingToken is ERC721Full, Ownable {
   //   _burn(msg.sender, _tokenId);
   // }
 
-  function tokensOfOwner(address _owner) external view returns (uint256[] memory) {
-    uint256 balance = balanceOf(_owner);
+  function tokensOfOwner(address _tokenOwner) external view returns (uint256[] memory) {
+    uint256 balance = balanceOf(_tokenOwner);
 
     if (balance == 0) {
       return new uint256[](0);
@@ -153,7 +165,7 @@ contract BookingToken is ERC721Full, Ownable {
 
     uint256 tokenId;
     for (tokenId = 1; tokenId <= maxTokenId; tokenId++) {
-      if (ownerOf(tokenId) == _owner) {
+      if (ownerOf(tokenId) == _tokenOwner) {
         result[idx] = tokenId;
         idx++;
       }

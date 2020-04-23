@@ -9,11 +9,18 @@ import {
   Box,
   FormControl,
   InputLabel,
+  Input,
   Select,
   MenuItem,
   Button,
-  Typography
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
+
 } from '@material-ui/core';
+import MaskedInput from 'react-text-mask';
 import DoneIcon from '@material-ui/icons/Done';
 import room1Image from '../images/9.jpg';
 
@@ -28,6 +35,7 @@ export default function Room(props) {
   const [checkoutDate, setCheckoutDate] = React.useState(query.get("out"));
   const [adultNumber, setAdultNumber] = React.useState(query.get("adult"));
   const [childNumber, setChildNumber] = React.useState(query.get("child"));
+  const [open, setOpen] = React.useState(false);
 
   const handleCheckinDateChange = (event) => {
     setCheckinDate(event.target.value);
@@ -42,6 +50,14 @@ export default function Room(props) {
     setChildNumber(event.target.value);
   };
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <Grid container justify="center">
       <Grid container justify="center">
@@ -49,12 +65,13 @@ export default function Room(props) {
           <Box m={5} />
           <Card>
             <CardContent>
+              <Typography variant="h4">Hotel1</Typography>
               <Typography variant="h4">Room1</Typography>
             </CardContent>
             <CardMedia
               image={room1Image}
               title="Paella dish"
-              style={{width: "100%", height: "500px"}}
+              style={{width: "100%", height: "400px"}}
             />
           </Card>
         </Grid>
@@ -102,7 +119,7 @@ export default function Room(props) {
           </Grid>
           <Grid container spacing={2} direction="row">
             <Grid item>
-              <FormControl variant="outlined" InputLabelProps={{shrink: true}}>
+              <FormControl variant="outlined">
                 <InputLabel id="adult-select-label">Adults</InputLabel>
                 <Select
                   labelId="adult-select-label"
@@ -153,14 +170,124 @@ export default function Room(props) {
           <Box m={3} />
           <Grid container alignItems="center">
             <Grid item>
-              <Button href={`/reservation?in=${checkinDate}&out=${checkoutDate}&adult=${adultNumber}&child=${childNumber}`} variant="contained" color="primary">
+              <Button
+                // href={`/reservation?in=${checkinDate}&out=${checkoutDate}&adult=${adultNumber}&child=${childNumber}`}
+                onClick={handleClickOpen}
+                variant="contained"
+                color="primary"
+              >
                 <DoneIcon />Reservation
               </Button>
+              <PaymentDialog open={open} onClose={handleClose} url={`/reservation?in=${checkinDate}&out=${checkoutDate}&adult=${adultNumber}&child=${childNumber}`}/>
             </Grid>
           </Grid>
         </Grid>
       </Grid>
       <Box m={5} />
     </Grid>
+  );
+}
+
+function PaymentDialog(props) {
+  const { onClose, selectedValue, open, url } = props;
+
+  const handleClose = () => {
+    onClose(selectedValue);
+  };
+
+  const handleListItemClick = (value) => {
+    onClose(value);
+  };
+
+  
+
+  return (
+    <Dialog onClose={handleClose} aria-labelledby="payment-dialog-title" open={open}>
+      <DialogTitle id="payment-dialog-title">Payment</DialogTitle>
+        <DialogContent>
+          <FormControl variant="outlined" required={true}>
+            <InputLabel htmlFor="card-number-input">Card number</InputLabel>
+            <Input
+              value='4242-4242-4242-4242'
+              name="textmask"
+              id="card-number-input"
+              inputComponent={CardNumberCustom}
+            />
+          </FormControl>
+        </DialogContent>
+        <DialogContent>
+          <FormControl variant="outlined" required={true}>
+            <InputLabel htmlFor="year-month-input">Month/Year</InputLabel>
+            <Input
+              value='01/24'
+              name="textmask"
+              id="year-month-input"
+              inputComponent={YearMonthCustom}
+            />
+          </FormControl>
+          <FormControl variant="outlined" required={true}>
+            <InputLabel htmlFor="code-input">Security code</InputLabel>
+            <Input
+              value='123'
+              name="textmask"
+              id="code-input"
+            />
+          </FormControl>
+        </DialogContent>
+        <DialogContent>
+          <FormControl variant="outlined" required={true}>
+            <InputLabel htmlFor="name-input">Name</InputLabel>
+            <Input
+              value='TOMOHIRO FURUTA'
+              name="textmask"
+              id="name-input"
+            />
+          </FormControl>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button
+            href={url}
+            color="primary"
+          >
+            Pay
+          </Button>
+        </DialogActions>
+    </Dialog>
+  );
+}
+
+function CardNumberCustom(props) {
+  const { inputRef, ...other } = props;
+
+  return (
+    <MaskedInput
+      {...other}
+      ref={(ref) => {
+        inputRef(ref ? ref.inputElement : null);
+      }}
+      mask={[/\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+      placeholderChar={'\u2000'}
+      showMask
+    />
+  );
+}
+
+
+function YearMonthCustom(props) {
+  const { inputRef, ...other } = props;
+
+  return (
+    <MaskedInput
+      {...other}
+      ref={(ref) => {
+        inputRef(ref ? ref.inputElement : null);
+      }}
+      mask={[/[0-1]/, /\d/, '/', /\d/, /\d/]}
+      placeholderChar={'\u2000'}
+      showMask
+    />
   );
 }

@@ -98,7 +98,7 @@ export default function Hotel(props) {
               />
               <Grid item xs={4}>
                 <CardContent>
-                  <div className={classes.root}><CompareArrows /><span>Marcket Place</span></div>
+                  <div className={classes.root}><CompareArrows /><span>Marcketplace</span></div>
                   <Typography variant="h5">Room2</Typography>
                   <Typography variant="subtitle2">Amenities: towel, dryer</Typography>
                   <Typography variant="body1">discription discription discription discription discription discription discription discription discription discription discription discription discription discription discription</Typography>

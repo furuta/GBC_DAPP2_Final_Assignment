@@ -1,11 +1,11 @@
 const accounts = [
   {
-    address: '0x69A016A1CeAA717F20674B772a1725063Ed80D2d',
+    address: '0x1945ff695bd9C95790e6c1aAf84bB19c59d7c282',
     type: 'hotel',
     name: 'Hotel1'
   },
   {
-    address: '0x5A827381062a3e8205f6e56E7F48F319FEE50441',
+    address: '0x1396CE37663447E66FD87145087a658Ff7D8Cf13',
     type: 'user',
     name: 'User1'
   }
